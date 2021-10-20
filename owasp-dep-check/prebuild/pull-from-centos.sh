@@ -2,8 +2,8 @@
 
 set -xe
 
-OWASP_DEP_CHK_VERSION=6.2.2
-SDP_DCAR_OWASP_DEP_CHK_VERSION=dcar-2.1
+OWASP_DEP_CHK_VERSION=6.4.1
+SDP_DCAR_OWASP_DEP_CHK_VERSION=dcar-2.2
 
 rm -rf /root/prebuild/dependencies
 
@@ -18,14 +18,10 @@ yum install -y yum-utils
 yumdownloader mono-complete -y --resolve --destdir /root/prebuild/dependencies/mono-complete --disableplugin=subscription-manager
 yumdownloader glibc -y --resolve --destdir /root/prebuild/dependencies/mono-complete --disableplugin=subscription-manager
 yumdownloader glibc-common -y --resolve --destdir /root/prebuild/dependencies/mono-complete --disableplugin=subscription-manager
-yumdownloader glib2 -y --resolve --destdir /root/prebuild/dependencies/mono-complete --disableplugin=subscription-manager
+yumdownloader glib2-2.56.4-9.el8 -y --resolve --destdir /root/prebuild/dependencies/mono-complete --disableplugin=subscription-manager
 
 # fetch dependency-check upstream binary
-#curl -sSLo /root/prebuild/dependencies/owasp/dependency-check-${OWASP_DEP_CHK_VERSION}-release.zip https://dl.bintray.com/jeremy-long/owasp/dependency-check-${OWASP_DEP_CHK_VERSION}-release.zip
-
-curl -sSLo /root/prebuild/dependencies/owasp/dependency-check-${OWASP_DEP_CHK_VERSION}-release.zip https://github.com/jeremylong/DependencyCheck/releases/download/v6.2.2/dependency-check-${OWASP_DEP_CHK_VERSION}-release.zip
-
-
+curl -sSLo /root/prebuild/dependencies/owasp/dependency-check-${OWASP_DEP_CHK_VERSION}-release.zip https://github.com/jeremylong/DependencyCheck/releases/download/v${OWASP_DEP_CHK_VERSION}/dependency-check-${OWASP_DEP_CHK_VERSION}-release.zip
 
 yum install -y ruby
 # fetch ruby dependencies

@@ -3,12 +3,18 @@ ARG BASE_IMAGE=ubi8/ubi
 ARG BASE_TAG=8.4
 FROM ${BASE_REGISTRY}/${BASE_IMAGE}:${BASE_TAG}
 
+ENV SDP_DCAR_OWASP_DEP_CHK_VERSION dcar-2.2
+ENV OWASP_DEP_CHK_VERSION 6.4.1
+ENV HOME /root
+ENV JAVA_HOME /usr/lib/jvm/java
+ARG user=dependencycheck
+
 ### Required Atomic/OpenShift Labels - https://github.com/projectatomic/ContainerApplicationGenericLabels
 LABEL name="Solutions Delivery Platform: Jenkins Agent" \
       maintainer="terrana_steven@bah.com" \
       vendor="Booz Allen Hamilton" \
-      version="6.2.2" \
-      release="6.2.2" \
+      version="${OWASP_DEP_CHK_VERSION}" \
+      release="${OWASP_DEP_CHK_VERSION}" \
       summary="OWASP Dependency Check  container" \
       description="The OWASP Dependency Check container image for the Solutions Delivery Platform"
 
@@ -19,13 +25,6 @@ COPY LICENSE /licenses
 RUN INSTALL_PKGS="java-1.8.0-openjdk-devel ruby glibc glibc-common" && \
     yum -y update-minimal --setopt=tsflags=nodocs --security  && \
     yum -y install --setopt=tsflags=nodocs ${INSTALL_PKGS}
-
-ENV SDP_DCAR_OWASP_DEP_CHK_VERSION dcar-2.1
-ENV OWASP_DEP_CHK_VERSION 6.2.2
-ENV HOME /root
-ENV JAVA_HOME /usr/lib/jvm/java
-
-ARG user=dependencycheck
 
 # Pull dependencies from sdp-images release artifacts and verify contents
 RUN mkdir /root/tmp
