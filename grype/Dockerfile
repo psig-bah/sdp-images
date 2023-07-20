@@ -1,4 +1,4 @@
-# Copyright © 2022 Booz Allen Hamilton. All Rights Reserved.
+# Copyright © 2023 Booz Allen Hamilton. All Rights Reserved.
 # This software package is licensed under the Booz Allen Public License. The license can be found in the License file or at http://boozallen.github.io/licenses/bapl
 
 ARG BASE_REGISTRY=registry.access.redhat.com
@@ -39,17 +39,19 @@ ENV PROGRAM_NAME grype
 ENV PROGRAM_VERSION v0.38.0
 ENV HOME /root
 ENV PROGRAM_DESTINATION_DIR /usr/local/bin
+ENV GRYPE_DB_AUTO_UPDATE false
 
 ARG user=${PROGRAM_NAME}
 
 WORKDIR /scanner
 
 # Install Grype
-RUN curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b ${PROGRAM_DESTINATION_DIR} ${PROGRAM_VERSION}
+RUN curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b ${PROGRAM_DESTINATION_DIR} ${PROGRAM_VERSION} && \
+  grype db update
 
 # Add user, create required directories and cleanup
-RUN useradd -ms /bin/bash ${user}                                                                              && \
-  chown -R ${user}:${user} ${PROGRAM_DESTINATION_DIR}/${PROGRAM_NAME}                                         && \
+RUN useradd -ms /bin/bash ${user}                                                                            && \
+  chown -R ${user}:${user} ${PROGRAM_DESTINATION_DIR}/${PROGRAM_NAME}                                        && \
   mkdir /report                                                                                              && \
   chown -R ${user}:${user} /report                                                                           && \
   yum --nogpgcheck --disableplugin=subscription-manager clean all
